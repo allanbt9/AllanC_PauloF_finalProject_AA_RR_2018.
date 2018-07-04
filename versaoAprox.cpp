@@ -3,7 +3,7 @@
 #include <list>
 #include <stack>
 #include <limits.h>
-#define NINF INT_MIN
+#define NINF INT_MIN //minimo valor de um inteiro -2147483648
 using namespace std;
 
 /*
@@ -102,31 +102,35 @@ void Graph::longestPath(int s)
         if (visited[i] == false)
             topologicalSortUtil(i, visited, Stack);
 
-    // Initialize distances to all vertices as infinite and
-    // distance to source as 0
+    /*
+    vai inicializar o vetor de distancias dist() com NINF, no caso
+    isso é apenas pra preencher o vetor com "nada" por assim dizer,
+    e a posiçao do no origem s ele preenche com zero, pra saber quando é a origem
+    e nao calcular a distancia até ele
+    */
     for (int i = 0; i < V; i++)
         dist[i] = NINF;
     dist[s] = 0;
 
     // Process vertices in topological order
-    while (Stack.empty() == false){
+    while (Stack.empty() == false){ // verifica se a pilha está vazia
         // pega o proximo vertice da ordem topologica
         int u = Stack.top();
-        Stack.pop();
+        Stack.pop(); //desempilha a pilha
 
         //atualiza as distancias de todos os vertices
         list<AdjListNode>::iterator i;
         if (dist[u] != NINF){
-            for (i = adj[u].begin(); i != adj[u].end(); ++i)
+            for (i = adj[u].begin(); i != adj[u].end(); ++i){
                 if(dist[i->getV()] < dist[u] + i->getWeight())
                     dist[i->getV()] = dist[u] + i->getWeight();
+            }
         }
     }
 
     //a maior distancia do vertice de origem para todos os vertices
     for (int i = 0; i < V; i++)
-        (dist[i] == NINF)? cout << "INF ":
-                           cout << dist[i] << " ";
+        (dist[i] == NINF)? cout << "INF ": cout << dist[i] << " ";
 }
 
 int main(void){
